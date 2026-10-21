@@ -1,0 +1,41 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: unicorn-eks-cluster
+  region: ap-northeast-2
+  version: "1.35"
+
+iam:
+  withOIDC: true
+
+vpc:
+  subnets:
+    private:
+      ap-northeast-2a: { id: subnet-0439f486e440d5e81 }
+      ap-northeast-2b: { id: subnet-047d8bb4b01beaf9e }
+      ap-northeast-2c: { id: subnet-0562a2b3fcf5973a7 }
+  clusterEndpoints:
+    privateAccess: true
+    publicAccess: false
+
+managedNodeGroups:
+  - name: unicorn-k8snode-app-ng
+    instanceName: unicorn-k8snode-app-node
+    instanceType: t3.medium
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 2
+    privateNetworking: true
+    labels:
+      unicorn: app
+
+  - name: unicorn-k8snode-addon-ng
+    instanceType: t3.medium
+    instanceName: unicorn-k8snode-addon-node
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 2
+    privateNetworking: true
+    labels:
+      unicorn: addon
